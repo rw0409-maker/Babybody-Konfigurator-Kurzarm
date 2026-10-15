@@ -88,9 +88,13 @@ body {
   object-fit: contain;
 }
 
+/*
+  DRUCKVORSCHAU:
+  15 % KLEINER UND 4 % WEITER OBEN
+*/
 .print {
   position: absolute;
-  top: 25%;
+  top: 21%;
   left: 25%;
   width: 50%;
   height: 34%;
@@ -99,6 +103,8 @@ body {
   align-items: center;
   justify-content: flex-start;
   pointer-events: none;
+  transform: scale(0.85);
+  transform-origin: top center;
 }
 
 .print-line {
@@ -115,7 +121,10 @@ body {
   display: none;
 }
 
-/* ICON: ABSTAND UM 10 % VERRINGERT */
+/*
+  ICON-ABSTAND:
+  BEREITS UM 10 % VERRINGERT
+*/
 .preview-icon {
   display: block;
   flex: 0 0 auto;
@@ -642,7 +651,6 @@ function applyIconMask(element, url) {
   Transparente Bereiche bleiben transparent.
 */
 const teddyCache = new Map();
-let teddyOriginal = null;
 let teddyLoadPromise = null;
 
 function loadTeddy() {
@@ -652,11 +660,7 @@ function loadTeddy() {
     const image = new Image();
     image.crossOrigin = "anonymous";
 
-    image.onload = () => {
-      teddyOriginal = image;
-      resolve(image);
-    };
-
+    image.onload = () => resolve(image);
     image.onerror = reject;
 
     image.src = ICONS.find(
@@ -698,11 +702,6 @@ async function getColoredTeddy(hex) {
     const g = data[i + 1];
     const b = data[i + 2];
 
-    /*
-      Weiße Motivflächen bleiben weiß.
-      Alle übrigen sichtbaren Flächen
-      erhalten die gewählte Druckfarbe.
-    */
     const isWhite =
       r > 245 &&
       g > 245 &&
@@ -754,10 +753,6 @@ async function setIcon(element, icon, hex) {
         image.src = colored;
       }
     } catch (error) {
-      /*
-        Falls die Bildverarbeitung blockiert wird,
-        wird das Originalbild angezeigt.
-      */
       if (
         image.isConnected &&
         element.contains(image)
@@ -889,8 +884,8 @@ function renderIcons() {
       const image = document.createElement("span");
       image.className = "tile-icon";
 
-      setIcon(image, icon, selectedInk().hex);
       button.appendChild(image);
+      setIcon(image, icon, selectedInk().hex);
 
       if (state.ink === "Weiß") {
         button.classList.add("white-icon");
