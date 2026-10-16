@@ -64,9 +64,11 @@ body {
   padding: 15px;
 }
 
+/* LIVE-VORSCHAU BLEIBT BEIM SCROLLEN SICHTBAR */
 .preview {
   position: sticky;
   top: 8px;
+  align-self: start;
 }
 
 .preview h2 {
@@ -88,10 +90,7 @@ body {
   object-fit: contain;
 }
 
-/*
-  DRUCKVORSCHAU:
-  15 % KLEINER UND 4 % WEITER OBEN
-*/
+/* DRUCKVORSCHAU: UNVERÄNDERT */
 .print {
   position: absolute;
   top: 21%;
@@ -121,10 +120,6 @@ body {
   display: none;
 }
 
-/*
-  ICON-ABSTAND:
-  BEREITS UM 10 % VERRINGERT
-*/
 .preview-icon {
   display: block;
   flex: 0 0 auto;
@@ -144,7 +139,6 @@ body {
   display: none;
 }
 
-/* TEDDY MIT WEISSER SCHNAUZE */
 .teddy-icon {
   background-color: transparent !important;
   -webkit-mask-image: none !important;
@@ -403,7 +397,9 @@ input:focus-visible {
   }
 
   .preview {
+    position: sticky;
     top: 6px;
+    align-self: start;
   }
 
   .preview h2,
@@ -538,14 +534,17 @@ input:focus-visible {
 const ROOT =
   "https://cdn.shopify.com/s/files/1/0761/4932/6151/files/";
 
+/* ZUERST 7 KURZARM-, DANN 2 LANGARM-BODYS */
 const BODY_COLORS = [
-  ["Dusty Rose", "babybody-kurarm-dusty-rose-verschenkich.jpg?v=1792070883"],
-  ["Hellblau", "babybody-kurarm-hellblau-verschenkich.jpg?v=1792070885"],
-  ["Natural", "babybody-kurarm-natural-verschenkich.jpg?v=1792070885"],
-  ["Powder Pink", "babybody-kurarm-powder-pink-verschenkich.jpg?v=1792070885"],
-  ["Sage Green", "babybody-kurarm-sage-green-verschenkich.jpg?v=1792070885"],
-  ["Soft Yellow", "babybody-kurarm-soft-yellow-verschenkich.jpg?v=1792070885"],
-  ["Weiß", "babybody-kurarm-weiss-verschenkich.jpg?v=1792070884"]
+  ["Kurzarm – Dusty Rose", "babybody-kurarm-dusty-rose-verschenkich.jpg?v=1792070883"],
+  ["Kurzarm – Hellblau", "babybody-kurarm-hellblau-verschenkich.jpg?v=1792070885"],
+  ["Kurzarm – Natural", "babybody-kurarm-natural-verschenkich.jpg?v=1792070885"],
+  ["Kurzarm – Powder Pink", "babybody-kurarm-powder-pink-verschenkich.jpg?v=1792070885"],
+  ["Kurzarm – Sage Green", "babybody-kurarm-sage-green-verschenkich.jpg?v=1792070885"],
+  ["Kurzarm – Soft Yellow", "babybody-kurarm-soft-yellow-verschenkich.jpg?v=1792070885"],
+  ["Kurzarm – Weiß", "babybody-kurarm-weiss-verschenkich.jpg?v=1792070884"],
+  ["Langarm – Natural", "Babybodies_clean.jpg?v=1792130870"],
+  ["Langarm – Weiß", "Babybodies_clean3.jpg?v=1792130871"]
 ].map(([name, file]) => ({
   name,
   url: ROOT + file
@@ -593,7 +592,7 @@ const FONTS = [
 }));
 
 const state = {
-  bodyColor: "Weiß",
+  bodyColor: "Kurzarm – Weiß",
   ink: "Schwarz",
   icon: "Teddy",
   texts: [
@@ -644,12 +643,7 @@ function applyIconMask(element, url) {
   element.style.maskImage = value;
 }
 
-/*
-  TEDDY:
-  Graue Bereiche werden eingefärbt.
-  Weiße Bereiche bleiben weiß.
-  Transparente Bereiche bleiben transparent.
-*/
+/* TEDDY MIT WEISSER SCHNAUZE */
 const teddyCache = new Map();
 let teddyLoadPromise = null;
 
@@ -1005,7 +999,7 @@ function renderPreview() {
 /* ETSY-ZUSAMMENFASSUNG */
 function getSummary() {
   return [
-    "Babybodyfarbe: " + state.bodyColor,
+    "Babybody: " + state.bodyColor,
     "Wunschtext 1: " + state.texts[0],
     "Schrift 1: " +
       selectedFont(state.fonts[0]).name,
@@ -1144,7 +1138,6 @@ renderIcons();
 renderPreview();
 renderSummary();
 
-/* NACH LADEN DER SCHRIFTARTEN */
 if (document.fonts && document.fonts.ready) {
   document.fonts.ready.then(() => {
     renderPreview();
@@ -1152,7 +1145,6 @@ if (document.fonts && document.fonts.ready) {
   });
 }
 
-/* RESPONSIVE VORSCHAU */
 if (typeof ResizeObserver !== "undefined") {
   new ResizeObserver(() => {
     renderPreview();
