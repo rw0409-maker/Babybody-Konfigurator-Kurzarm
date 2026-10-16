@@ -469,20 +469,20 @@ input:focus-visible {
   </div>
 
   <div class="section">
-    <h2>2. Wunschtext 1</h2>
+    <h2>2. Wunschtext 1 (optional)</h2>
     <div class="text-group">
       <input id="text1" class="field" type="text"
-        value="Wunschtext 1" required>
+        value="Wunschtext 1">
       <h3>Schriftart für Wunschtext 1</h3>
       <div id="fonts1" class="choices"></div>
     </div>
   </div>
 
   <div class="section">
-    <h2>3. Wunschtext 2</h2>
+    <h2>3. Wunschtext 2 (optional)</h2>
     <div class="text-group">
       <input id="text2" class="field" type="text"
-        value="Wunschtext 2" required>
+        value="Wunschtext 2">
       <h3>Schriftart für Wunschtext 2</h3>
       <div id="fonts2" class="choices"></div>
     </div>
@@ -496,8 +496,8 @@ input:focus-visible {
       <h3>Schriftart für Wunschtext 3</h3>
       <div id="fonts3" class="choices"></div>
       <p class="help">
-        Wird dieses Feld geleert, rutscht das Icon
-        automatisch nach oben.
+        Leere Wunschtexte nehmen keinen Platz ein.
+        Das Icon rückt automatisch nach oben.
       </p>
     </div>
   </div>
@@ -999,40 +999,32 @@ function renderPreview() {
 function getSummary() {
   return [
     "Babybody: " + state.bodyColor,
-    "Wunschtext 1: " + state.texts[0],
+    "Wunschtext 1: " +
+      (state.texts[0].trim() || "Kein Wunschtext"),
     "Schrift 1: " +
-      selectedFont(state.fonts[0]).name,
-    "Wunschtext 2: " + state.texts[1],
+      (state.texts[0].trim()
+        ? selectedFont(state.fonts[0]).name
+        : "–"),
+    "Wunschtext 2: " +
+      (state.texts[1].trim() || "Kein Wunschtext"),
     "Schrift 2: " +
-      selectedFont(state.fonts[1]).name,
+      (state.texts[1].trim()
+        ? selectedFont(state.fonts[1]).name
+        : "–"),
     "Wunschtext 3: " +
-      (state.texts[2] || "Kein Wunschtext"),
+      (state.texts[2].trim() || "Kein Wunschtext"),
     "Schrift 3: " +
-      (
-        state.texts[2].trim()
-          ? selectedFont(state.fonts[2]).name
-          : "–"
-      ),
+      (state.texts[2].trim()
+        ? selectedFont(state.fonts[2]).name
+        : "–"),
     "Druckfarbe: " + state.ink,
     "Icon: " + state.icon
   ].join("\n");
 }
 
-/* PFLICHTFELDER PRÜFEN */
+/* OPTIONAL: NUR TEXTLÄNGE UND ZEICHENZAHL PRÜFEN */
 function updateValidation(tooLong) {
   const messages = [];
-
-  if (!state.texts[0].trim()) {
-    messages.push(
-      "Bitte Wunschtext 1 ausfüllen."
-    );
-  }
-
-  if (!state.texts[1].trim()) {
-    messages.push(
-      "Bitte Wunschtext 2 ausfüllen."
-    );
-  }
 
   if (tooLong) {
     messages.push(
@@ -1089,8 +1081,6 @@ $("copy").addEventListener(
     const text = getSummary();
 
     if (
-      !state.texts[0].trim() ||
-      !state.texts[1].trim() ||
       fitText() ||
       text.length > 300
     ) {
