@@ -89,7 +89,7 @@ body {
   object-fit: contain;
 }
 
-/* DRUCKVORSCHAU: NUR ETWAS WEITER UNTEN */
+/* DRUCKVORSCHAU DER BISHERIGEN BABYBODYS */
 .print {
   position: absolute;
   top: 26%;
@@ -103,6 +103,12 @@ body {
   pointer-events: none;
   transform: scale(0.85);
   transform-origin: top center;
+}
+
+/* NEU: DRUCKPOSITION FÜR DIE VIER WICKELBODYS */
+.photo.wickelbody-position .print {
+  top: 39%;
+  left: 25%;
 }
 
 .print-line {
@@ -533,7 +539,7 @@ input:focus-visible {
 const ROOT =
   "https://cdn.shopify.com/s/files/1/0761/4932/6151/files/";
 
-/* ZUERST 7 KURZARM-, DANN 2 LANGARM-BODYS */
+/* BABYBODYFARBEN: 9 BISHERIGE + 4 NEUE WICKELBODYS */
 const BODY_COLORS = [
   ["Kurzarm – Dusty Rose", "babybody-kurarm-dusty-rose-verschenkich.jpg?v=1792070883"],
   ["Kurzarm – Hellblau", "babybody-kurarm-hellblau-verschenkich.jpg?v=1792070885"],
@@ -543,7 +549,12 @@ const BODY_COLORS = [
   ["Kurzarm – Soft Yellow", "babybody-kurarm-soft-yellow-verschenkich.jpg?v=1792070885"],
   ["Kurzarm – Weiß", "babybody-kurarm-weiss-verschenkich.jpg?v=1792070884"],
   ["Langarm – Natural", "Babybodies_clean.jpg?v=1792130870"],
-  ["Langarm – Weiß", "Babybodies_clean3.jpg?v=1792130871"]
+  ["Langarm – Weiß", "Babybodies_clean3.jpg?v=1792130871"],
+
+  ["Wickelbody Kurzarm Natural", "Wickelbody-kurzarm-natural.png?v=1792666575"],
+  ["Wickelbody Kurzarm Weiß", "Wickelbody-kurzarm-weiss.png?v=1792666574"],
+  ["Wickelbody Langarm Natural", "Wickelbody-langarm-natural.png?v=1792666574"],
+  ["Wickelbody Langarm Weiß", "Wickelbody-langarm-weiss.png?v=1792666574"]
 ].map(([name, file]) => ({
   name,
   url: ROOT + file
@@ -619,6 +630,21 @@ const selectedIcon = () =>
 
 const selectedFont = family =>
   FONTS.find(x => x.family === family);
+
+/* NEU: WICKELBODYS MIT EIGENER DRUCKPOSITION */
+const WICKELBODYS = new Set([
+  "Wickelbody Kurzarm Natural",
+  "Wickelbody Kurzarm Weiß",
+  "Wickelbody Langarm Natural",
+  "Wickelbody Langarm Weiß"
+]);
+
+function updateBodyPrintPosition() {
+  $("photo").classList.toggle(
+    "wickelbody-position",
+    WICKELBODYS.has(state.bodyColor)
+  );
+}
 
 /* BUTTONS */
 function makeButton(parent, active, onClick) {
@@ -967,6 +993,9 @@ function renderPreview() {
   $("bodyImage").src = selectedBody().url;
   $("bodyImage").alt =
     "Babybody " + state.bodyColor;
+
+  /* NEU: POSITION AUTOMATISCH UMSCHALTEN */
+  updateBodyPrintPosition();
 
   $("print").style.color = selectedInk().hex;
 
